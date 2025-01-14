@@ -1,0 +1,5 @@
+print("hello")
+print("word")
+print("--------------------------------------------------")
+print("hello",end='')
+print("word",end='')
