@@ -14,5 +14,5 @@
 * 一些测试代码，用来测试一些脚本功能。
 
 ## 所属
-- [patch-python-study](https://github.com/huangfuyi/patch-python-study)
-- [Ealsen](https://github.com/huangfuyi)
+- [patch-python-study](https://github.com/Ealsen/patch-python-study)
+- [Ealsen](https://github.com/Ealsen)
