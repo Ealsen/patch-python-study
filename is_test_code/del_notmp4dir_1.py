@@ -1,7 +1,7 @@
 import os
 import shutil
 import time
-from colorama import Fore, Style
+from colorama import Fore
 
 # 脚本功能
 # 遍历指定目录及其子目录，删除其中没有 .mp4 文件的目录，并记录删除的目录及其子目录路径、发现的 .mp4 文件路径。
@@ -12,14 +12,17 @@ from colorama import Fore, Style
 os.system("")  # 确保颜色代码在 Windows cmd 下生效
 
 # 指定要遍历的目录路径
-current_dir = r"F:\Multimedia\the_video\CRTubeGetVideoDownload"
+current_dir = r"F:\Multimedia\the_video\BilbilVideoDownload"
+
+# 排除目录列表（白名单）
+exclude_dirs = ['.temp', '.thumb', 'cache', 'eg_exclude_dir1', 'eg_exclude_dir2', 'eg_exclude_dir3']  # 在这里添加你不希望删除的目录名
 
 # 日志文件路径
-log_file_path = current_dir + os.sep + "directory_cleanup_log.txt"
+log_file_path = os.path.join(current_dir, "directory_cleanup_log.txt")
 
 # 初始化计数器
 deleted_dirs = 0  # 记录删除的空目录数量
-found_mp4_files = 0  # 记录发现的 .mp4 文件数量（修正了变量名以避免误导）
+found_mp4_files = 0  # 记录发现的 .mp4 文件数量
 checked_dirs = 0  # 记录检查的目录数量
 directories_to_delete = []  # 记录需要删除的目录路径
 
@@ -34,6 +37,14 @@ with open(log_file_path, "a", encoding="utf-8") as log_file:  # 使用追加模�
     # 这样可以确保在删除空目录时，先处理子目录，再处理父目录
     for root, dirs, files in os.walk(current_dir, topdown=False):
         checked_dirs += 1  # 增加检查的目录数量
+
+        # 提取当前目录的名称
+        dir_name = os.path.basename(root)
+
+        # 检查当前目录是否在排除目录列表中，如果是则跳过
+        if dir_name in exclude_dirs:
+            continue
+
         mp4_files = [f for f in files if f.lower().endswith(".mp4")]  # 找到目录中所有的 .mp4 文件
 
         # 如果目录中没有 .mp4 文件，记录目录路径
@@ -52,6 +63,13 @@ print(f"发现了 {found_mp4_files} 个 .mp4 文件。")  # 打印发现的 .mp4
 print(f"发现了 {len(directories_to_delete)} 个没有 .mp4 文件的子目录。")  # 打印没有 .mp4 文件的子目录数量
 
 # 提示用户确认操作
+if directories_to_delete:
+    print(Fore.CYAN + "以下目录将被删除：")
+    for root in directories_to_delete:
+        print(Fore.CYAN + root)
+else:
+    print(Fore.GREEN + "没有发现需要删除的空目录。")
+
 confirm = input(Fore.CYAN + "Do you want to proceed with deleting these directories? (yes/no): ").strip().lower()
 if confirm not in ['yes', 'y']:
     print(Fore.YELLOW + "Operation cancelled.")

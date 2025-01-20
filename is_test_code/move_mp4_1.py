@@ -1,7 +1,7 @@
 import os
 import shutil
 import time
-from colorama import Fore, Style
+from colorama import Fore
 
 # 脚本功能：
 # 遍历脚本目录及其子目录，查找所有 .mp4 文件，并将其移动到脚本目录下。
@@ -14,16 +14,23 @@ os.system("")  # 确保颜色代码在 Windows cmd 下生效
 
 # 获取脚本执行目录
 # current_dir = os.getcwd()
-current_dir = r"F:\Multimedia\the_video\CRTubeGetVideoDownload"
+current_dir = r"F:\Multimedia\the_video\BilbilVideoDownload"
 total_mp4_files = 0
 moved_mp4_files = 0
 error_count = 0
+
+# 排除目录列表
+exclude_dirs = ['.temp','.thumb', 'cache','eg_exclude_dir1', 'eg_exclude_dir2', 'eg_exclude_dir3']  # 在这里添加你不希望遍历的目录名
 
 # 日志文件路径
 log_file = os.path.join(current_dir, "move_mp4_log.txt")
 
 # 遍历脚本目录及其子目录以统计 .mp4 文件总数
 for root, dirs, files in os.walk(current_dir):
+    # 检查当前目录是否在排除目录列表中，如果是则跳过
+    if any(exclude_dir in root for exclude_dir in exclude_dirs):
+        continue
+
     for file in files:
         if file.lower().endswith(".mp4"):
             total_mp4_files += 1
@@ -47,6 +54,10 @@ with open(log_file, "a", encoding="utf-8") as log:  # 使用追加模式
 
     # 遍历目录并移动 .mp4 文件
     for root, dirs, files in os.walk(current_dir):
+        # 检查当前目录是否在排除目录列表中，如果是则跳过
+        if any(exclude_dir in root for exclude_dir in exclude_dirs):
+            continue
+
         print(Fore.GREEN + f"Processing directory: {root}")
         for file in files:
             if file.lower().endswith(".mp4"):
